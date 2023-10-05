@@ -1,8 +1,8 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 import {v4 as uuidv4} from 'uuid';
-import { hashString } from '.index.js';
-import Verification from '../models/emailVerification';
+import { hashString } from './index.js';
+import Verification from '../models/emailVerification.js';
 dotenv.config();
 
 const {AUTH_EMAIL , AUTH_PASSWORD , APP_URL} = process.env;
@@ -11,7 +11,7 @@ let transporter = nodemailer.createTransport({
     host : "smtp-mail.outlook.com",
     auth :{
         user:AUTH_EMAIL,
-        pass: AUTH_PASSWORD,
+        pass:AUTH_PASSWORD,
     }
 })
 
@@ -40,10 +40,19 @@ export const sendVerificationEmail = async (user, res) =>{
             token: hashedToken,
             createdAt:Date.now(),
             expiresAt:Date.now() + 3600000,
-        })
+        });
 
-
-
+        if(newVerifiedEmail){
+            transporter.sendMail(mailOptions).then(() => {
+                res.status(201).send({
+                    success: "PENDING",
+                    message: "Verification email has been sent to your account. Check your email please."
+                })
+            }).catch((err) => {
+                console.log(err);
+                res.status(404).json({message: "Something went wrong"})
+            })
+        }
 
     } catch (error) {
         console.log(error);
