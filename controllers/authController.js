@@ -2,6 +2,7 @@
 import { sendVerificationEmail } from "../utils/sendEmail.js";
 import Users from "../models/userModel.js";
 import { hashString , compareString } from "../utils/index.js";
+import { createJwt } from "../utils/index.js";
 export const register = async (req , res ,next) => {
 
     const {firstName , lastName , email , password} = req.body;
@@ -26,10 +27,19 @@ export const register = async (req , res ,next) => {
             lastName,
             email,
             password : hashedPassword
-        });
+        }).then(() => {
+            res.status(201).send({
+                success: "Success",
+                message: "User Created"
+            })
+        }).catch((err) => {
+            console.log(err)
+            next("Error occured");
+        })
+
 
         // SEND EMAIL VERIFICATION
-        sendVerificationEmail(user,res);
+        //sendVerificationEmail(user,res);
 
 
         
@@ -75,7 +85,7 @@ export const login = async (req ,res ,next) => {
         }
 
         user.password = undefined;
-        const token = createJWT(user?._id);
+        const token = createJwt(user?._id);
 
         res.status(201).json({
             success: true,
