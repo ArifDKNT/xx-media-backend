@@ -5,7 +5,7 @@ import mongoose, { Schema } from 'mongoose';
 
 const passwordResetSchema = new mongoose.Schema(
     {
-       userId : {type : Schema.Types.ObjectI , ref: "Users" },
+       userId : {type : Schema.Types.ObjectId , ref: "Users" },
        email : {type:String , unique:true},
        token :String,
        createdAt : Date,

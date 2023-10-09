@@ -5,8 +5,8 @@ import mongoose, { Schema } from 'mongoose';
 
 const requestSchema = new mongoose.Schema(
     {
-       requestTo : {type : Schema.Types.ObjectI , ref: "Users" },
-       requestFrom : {type : Schema.Types.ObjectI , ref: "Users" },
+       requestTo : {type : Schema.Types.ObjectId , ref: "Users" },
+       requestFrom : {type : Schema.Types.ObjectId , ref: "Users" },
        requestStatus : { type :String , default : "Pending"}
     },
     {timestamps : true}
